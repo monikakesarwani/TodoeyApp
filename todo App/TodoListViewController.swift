@@ -21,10 +21,26 @@ class TodoListViewController: UITableViewController {
     
     //creating array for saving hardcore data
     var itemArray = ["Shopping", "Cleaning", "Cooking"]
+    
+    /*
+     ***** how to use use a default to persist data
+     1. So in order to persist data. we have to use a default. for creating a new object as a defaults
+    we'll set it to equal user defaults which is an interface to the user's default   database where you stole a key value pairs persistently across launches of your app.
+     2. Than we can save the updated item into array.
+     self.defaults.set(self.itemArray, forKey: "ItemTodoList")
+     it saved data into form of Dictionary value (any item in itemArray) Key ("ItemTodoList")
+     3. in order to retrieve our data is we can go into view did load and we can set  itemArray = defaults.array(forKey: "ItemTodoList") as! [String]
+    */
+    let defaults = UserDefaults.standard
+    
+    
 
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
+        if let item = defaults.array(forKey: "ItemTodoList") as? [String]{
+            itemArray = item
+        }
     }
 
     //MARK - TabelView Datasource Methods
@@ -79,7 +95,11 @@ class TodoListViewController: UITableViewController {
             //what gone be happened when user click hit add item on our UIAlert button
             
             self.itemArray.append(textField.text!)
-            //if I dont use below code nothing going to add in tableview therefore it must be used this line of code to load the new item into the table
+            
+            // you append any item in array and if app any resone is terminated and added item not going to save in array for that you have to use this this code and call it in viewDidLoad
+            self.defaults.set(self.itemArray, forKey: "ItemTodoList")
+            
+            
             self.tableView.reloadData()
             
         }
